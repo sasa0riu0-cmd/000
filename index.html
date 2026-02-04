@@ -3,9 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>うちの動画紹介サイト</title>
+    <title>マイブログ - 日々の学びと発見</title>
     <style>
-        /* 全体のスタイル */
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
@@ -14,109 +17,655 @@
             min-height: 100vh;
         }
 
-        /* メインコンテナ */
-        .container {
-            max-width: 1000px;
+        /* ヘッダー */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 40px 20px;
             text-align: center;
         }
 
-        /* 見出し */
-        h1 {
-            color: white;
+        header h1 {
+            margin: 0;
+            color: #667eea;
             font-size: 2.5em;
-            margin-bottom: 20px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         }
 
-        /* 説明文 */
-        .description {
-            color: white;
-            font-size: 1.2em;
-            margin-bottom: 50px;
-            opacity: 0.9;
+        header p {
+            margin: 10px 0 0 0;
+            color: #666;
+            font-size: 1.1em;
         }
 
-        /* 動画コンテナ */
-        .video-grid {
+        /* ナビゲーション */
+        nav {
+            background: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 15px 20px;
             display: flex;
+            gap: 20px;
             justify-content: center;
-            gap: 30px;
             flex-wrap: wrap;
         }
 
-        /* 各動画カード */
-        .video-card {
+        .nav-btn {
+            background: none;
+            border: 2px solid #667eea;
+            color: #667eea;
+            padding: 8px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        /* メインレイアウト */
+        .main-layout {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 30px;
+        }
+
+        /* 投稿フォーム */
+        .post-form {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            display: none;
+        }
+
+        .post-form.active {
+            display: block;
+        }
+
+        .post-form h2 {
+            margin-top: 0;
+            color: #667eea;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            font-family: inherit;
+        }
+
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            opacity: 0.8;
+        }
+
+        /* 検索ボックス */
+        .search-box {
             background: white;
             border-radius: 12px;
             padding: 20px;
-            width: 280px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+        }
+
+        /* 記事一覧 */
+        .blog-posts {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .blog-post {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
             transition: transform 0.3s ease;
         }
 
-        .video-card:hover {
-            transform: translateY(-5px);
+        .blog-post:hover {
+            transform: translateY(-3px);
         }
 
-        /* サムネイル */
-        .thumbnail {
-            width: 100%;
-            height: 180px;
-            background: linear-gradient(45deg, #4facfe 0%, #00f2fe 100%);
-            border-radius: 8px;
-            margin-bottom: 15px;
+        .post-title {
+            font-size: 1.8em;
+            color: #333;
+            margin: 0 0 10px 0;
+            font-weight: bold;
+        }
+
+        .post-meta {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .post-date {
+            color: #999;
+            font-size: 0.9em;
+        }
+
+        .category {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+        }
+
+        .category.tech { background: #667eea; }
+        .category.web { background: #f093fb; }
+        .category.game { background: #4facfe; }
+        .category.video { background: #fa709a; }
+        .category.life { background: #30cfd0; }
+
+        .post-content {
+            color: #555;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .read-more {
+            display: inline-block;
+            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: opacity 0.3s ease;
+        }
+
+        .read-more:hover {
+            opacity: 0.8;
+        }
+
+        .delete-btn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            margin-left: 10px;
+            font-weight: bold;
+        }
+
+        .delete-btn:hover {
+            background: #ff5252;
+        }
+
+        /* サイドバー */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .sidebar-widget {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .sidebar-widget h3 {
+            margin-top: 0;
+            color: #667eea;
+            font-size: 1.3em;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .profile-info {
+            text-align: center;
+        }
+
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
             font-size: 3em;
+            margin: 0 auto 15px;
         }
 
-        /* 動画タイトル */
-        .video-title {
-            font-size: 1.1em;
+        .profile-name {
             font-weight: bold;
             color: #333;
+            font-size: 1.2em;
             margin-bottom: 10px;
         }
 
-        /* 価格 */
-        .price {
-            color: #667eea;
-            font-size: 1.2em;
+        .profile-bio {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .category-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .category-list li {
+            padding: 10px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .category-list li:hover {
+            background: #f8f9ff;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .stat-box {
+            text-align: center;
+            padding: 15px;
+            background: #f8f9ff;
+            border-radius: 8px;
+        }
+
+        .stat-number {
+            font-size: 2em;
             font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        /* フッター */
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: white;
+            opacity: 0.8;
+            margin-top: 50px;
+        }
+
+        /* レスポンシブ */
+        @media (max-width: 768px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                order: -1;
+            }
+        }
+
+        .no-posts {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            text-align: center;
+            color: #999;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>うちの動画紹介サイト</h1>
-        <p class="description">これは、自由に動画を紹介するサイトです。</p>
-        
-        <div class="video-grid">
-            <!-- 動画カード1 -->
-            <div class="video-card">
-                <div class="thumbnail">🎬</div>
-                <div class="video-title">おすすめ動画 Vol.1</div>
-                <div class="price">100コイン</div>
-            </div>
-
-            <!-- 動画カード2 -->
-            <div class="video-card">
-                <div class="thumbnail">🎥</div>
-                <div class="video-title">おすすめ動画 Vol.2</div>
-                <div class="price">100コイン</div>
-            </div>
-
-            <!-- 動画カード3 -->
-            <div class="video-card">
-                <div class="thumbnail">📹</div>
-                <div class="video-title">おすすめ動画 Vol.3</div>
-                <div class="price">100コイン</div>
-            </div>
+    <!-- ヘッダー -->
+    <header>
+        <div class="header-content">
+            <h1>📝 マイブログ</h1>
+            <p>日々の学びと発見を記録するブログ</p>
         </div>
+    </header>
+
+    <!-- ナビゲーション -->
+    <nav>
+        <div class="nav-content">
+            <button class="nav-btn active" onclick="showSection('all')">🏠 すべて</button>
+            <button class="nav-btn" onclick="showSection('tech')">💻 テクノロジー</button>
+            <button class="nav-btn" onclick="showSection('web')">🌐 Web制作</button>
+            <button class="nav-btn" onclick="showSection('game')">🎮 ゲーム</button>
+            <button class="nav-btn" onclick="showSection('video')">🎬 動画制作</button>
+            <button class="nav-btn" onclick="togglePostForm()">✏️ 新規投稿</button>
+        </div>
+    </nav>
+
+    <!-- メインコンテンツ -->
+    <div class="main-layout">
+        <!-- 左側：記事エリア -->
+        <div>
+            <!-- 投稿フォーム -->
+            <div class="post-form" id="postForm">
+                <h2>✏️ 新しい記事を投稿</h2>
+                <form onsubmit="addPost(event)">
+                    <div class="form-group">
+                        <label>📌 タイトル</label>
+                        <input type="text" id="postTitle" required placeholder="記事のタイトルを入力">
+                    </div>
+                    <div class="form-group">
+                        <label>📁 カテゴリ</label>
+                        <select id="postCategory" required>
+                            <option value="tech">💻 テクノロジー</option>
+                            <option value="web">🌐 Web制作</option>
+                            <option value="game">🎮 ゲーム</option>
+                            <option value="video">🎬 動画制作</option>
+                            <option value="life">🌟 ライフスタイル</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>📝 本文</label>
+                        <textarea id="postContent" required placeholder="記事の内容を入力"></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn">🚀 投稿する</button>
+                </form>
+            </div>
+
+            <!-- 検索ボックス -->
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="🔍 記事を検索..." onkeyup="searchPosts()">
+            </div>
+
+            <!-- 記事一覧 -->
+            <div class="blog-posts" id="blogPosts"></div>
+        </div>
+
+        <!-- 右側：サイドバー -->
+        <aside class="sidebar">
+            <!-- プロフィール -->
+            <div class="sidebar-widget">
+                <h3>👤 プロフィール</h3>
+                <div class="profile-info">
+                    <div class="profile-avatar">😊</div>
+                    <div class="profile-name">ブログ管理人</div>
+                    <p class="profile-bio">AI、Web制作、ゲームが大好きな20代。日々学んだことをシェアしています！</p>
+                </div>
+            </div>
+
+            <!-- 統計 -->
+            <div class="sidebar-widget">
+                <h3>📊 ブログ統計</h3>
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-number" id="totalPosts">0</div>
+                        <div class="stat-label">記事数</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">5</div>
+                        <div class="stat-label">カテゴリ</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- カテゴリ -->
+            <div class="sidebar-widget">
+                <h3>📁 カテゴリ一覧</h3>
+                <ul class="category-list">
+                    <li onclick="showSection('tech')">💻 テクノロジー</li>
+                    <li onclick="showSection('web')">🌐 Web制作</li>
+                    <li onclick="showSection('game')">🎮 ゲーム</li>
+                    <li onclick="showSection('video')">🎬 動画制作</li>
+                    <li onclick="showSection('life')">🌟 ライフスタイル</li>
+                </ul>
+            </div>
+
+            <!-- 最近の更新 -->
+            <div class="sidebar-widget">
+                <h3>🔔 お知らせ</h3>
+                <p style="color: #666; line-height: 1.6;">
+                    ✨ ブログをリニューアルしました！<br>
+                    📝 投稿機能を追加<br>
+                    🔍 検索機能を実装
+                </p>
+            </div>
+        </aside>
     </div>
+
+    <!-- フッター -->
+    <footer>
+        <p>© 2026 マイブログ - All Rights Reserved</p>
+    </footer>
+
+    <script>
+        // カテゴリアイコン
+        const categoryIcons = {
+            tech: '💻',
+            web: '🌐',
+            game: '🎮',
+            video: '🎬',
+            life: '🌟'
+        };
+
+        const categoryNames = {
+            tech: 'テクノロジー',
+            web: 'Web制作',
+            game: 'ゲーム',
+            video: '動画制作',
+            life: 'ライフスタイル'
+        };
+
+        // 初期記事データ
+        let posts = [
+            {
+                id: Date.now() + 1,
+                title: 'AI ツールで作業効率が3倍になった話',
+                category: 'tech',
+                content: '最近、AI ツールを使い始めてから、コーディングや動画編集の効率が劇的に向上しました。特に自動化ワークフローを組むことで、これまで手作業で1時間かかっていた作業が20分で終わるように。今回は実際に使っているツールと具体的な活用法を紹介します...',
+                date: '2026年2月3日'
+            },
+            {
+                id: Date.now() + 2,
+                title: '初心者でも作れる！簡単Webサイト制作入門',
+                category: 'web',
+                content: 'HTMLとCSSを使って、初めてのWebサイトを作る方法を解説します。プログラミング未経験でも大丈夫！たった1つのファイルで完結するシンプルなサイトから始めて、徐々にステップアップしていきましょう。必要なのはメモ帳とブラウザだけです...',
+                date: '2026年2月1日'
+            },
+            {
+                id: Date.now() + 3,
+                title: 'ゲーミングPCの性能を最大限引き出す設定方法',
+                category: 'game',
+                content: '高性能なゲーミングPCを買ったのに、なぜかゲームがカクつく...そんな経験ありませんか？実は、初期設定のままだと本来のパフォーマンスが発揮できていない可能性があります。今回は、グラフィック設定からWindows最適化まで、具体的な手順を紹介します...',
+                date: '2026年1月28日'
+            },
+            {
+                id: Date.now() + 4,
+                title: '動画編集を自動化して時短する方法',
+                category: 'video',
+                content: 'YouTubeやSNS用の動画を毎日投稿している人にとって、編集作業は大きな負担です。しかし、テンプレートとバッチ処理を活用すれば、編集時間を大幅に短縮できます。今回は、CapCutやその他のツールを使った自動化ワークフローを解説します...',
+                date: '2026年1月25日'
+            }
+        ];
+
+        let currentFilter = 'all';
+
+        // 記事を表示
+        function renderPosts() {
+            const container = document.getElementById('blogPosts');
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            let filteredPosts = posts;
+            
+            // カテゴリフィルター
+            if (currentFilter !== 'all') {
+                filteredPosts = filteredPosts.filter(post => post.category === currentFilter);
+            }
+            
+            // 検索フィルター
+            if (searchTerm) {
+                filteredPosts = filteredPosts.filter(post => 
+                    post.title.toLowerCase().includes(searchTerm) || 
+                    post.content.toLowerCase().includes(searchTerm)
+                );
+            }
+
+            if (filteredPosts.length === 0) {
+                container.innerHTML = '<div class="no-posts">📭 記事が見つかりませんでした</div>';
+                return;
+            }
+
+            container.innerHTML = filteredPosts.map(post => `
+                <article class="blog-post">
+                    <h2 class="post-title">${post.title}</h2>
+                    <div class="post-meta">
+                        <span class="post-date">📅 ${post.date}</span>
+                        <span class="category ${post.category}">${categoryIcons[post.category]} ${categoryNames[post.category]}</span>
+                    </div>
+                    <p class="post-content">${post.content}</p>
+                    <a href="#" class="read-more">続きを読む →</a>
+                    <button class="delete-btn" onclick="deletePost(${post.id})">🗑️ 削除</button>
+                </article>
+            `).join('');
+
+            updateStats();
+        }
+
+        // 新規投稿
+        function addPost(event) {
+            event.preventDefault();
+            
+            const title = document.getElementById('postTitle').value;
+            const category = document.getElementById('postCategory').value;
+            const content = document.getElementById('postContent').value;
+            
+            const newPost = {
+                id: Date.now(),
+                title: title,
+                category: category,
+                content: content,
+                date: new Date().toLocaleDateString('ja-JP', {year: 'numeric', month: 'long', day: 'numeric'})
+            };
+            
+            posts.unshift(newPost);
+            
+            // フォームをリセット
+            event.target.reset();
+            document.getElementById('postForm').classList.remove('active');
+            
+            // 表示を更新
+            currentFilter = 'all';
+            updateNavButtons();
+            renderPosts();
+            
+            alert('✅ 記事を投稿しました！');
+        }
+
+        // 記事削除
+        function deletePost(id) {
+            if (confirm('この記事を削除しますか？')) {
+                posts = posts.filter(post => post.id !== id);
+                renderPosts();
+            }
+        }
+
+        // カテゴリフィルター
+        function showSection(category) {
+            currentFilter = category;
+            document.getElementById('postForm').classList.remove('active');
+            updateNavButtons();
+            renderPosts();
+        }
+
+        // ナビボタンの状態更新
+        function updateNavButtons() {
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            const activeBtn = Array.from(document.querySelectorAll('.nav-btn')).find(btn => 
+                btn.textContent.includes(currentFilter === 'all' ? 'すべて' : categoryNames[currentFilter])
+            );
+            
+            if (activeBtn) activeBtn.classList.add('active');
+        }
+
+        // 投稿フォーム表示切替
+        function togglePostForm() {
+            const form = document.getElementById('postForm');
+            form.classList.toggle('active');
+            
+            if (form.classList.contains('active')) {
+                form.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // 検索
+        function searchPosts() {
+            renderPosts();
+        }
+
+        // 統計更新
+        function updateStats() {
+            document.getElementById('totalPosts').textContent = posts.length;
+        }
+
+        // 初期表示
+        renderPosts();
+    </script>
 </body>
 </html>
